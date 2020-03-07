@@ -7,7 +7,6 @@ import lombok.Data;
  * @author izumi
  */
 @Data
-@TableName("message")
 public class Message {
     /**
      * 子类型，11/来自好友 1/来自在线状态 2/来自群 3/来自讨论组
