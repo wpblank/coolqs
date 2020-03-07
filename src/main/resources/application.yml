@@ -1,0 +1,14 @@
+server:
+  port: 894
+spring:
+  profiles:
+    include: my-config
+  datasource:
+    # url: 填写自己的数据库地址
+    # username:
+    # password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis-plus:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
