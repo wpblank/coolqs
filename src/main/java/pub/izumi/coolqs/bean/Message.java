@@ -1,5 +1,6 @@
 package pub.izumi.coolqs.bean;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -8,6 +9,8 @@ import lombok.Data;
  */
 @Data
 public class Message {
+    @TableId
+    private int id;
     /**
      * 子类型，11/来自好友 1/来自在线状态 2/来自群 3/来自讨论组
      */
