@@ -1,4 +1,4 @@
-package pub.izumi.coolqs.controller;
+package pub.izumi.coolqs.core.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pub.izumi.coolqs.bean.Message;
-import pub.izumi.coolqs.bean.MessageGroup;
-import pub.izumi.coolqs.mapper.MessageGroupMapper;
-import pub.izumi.coolqs.mapper.MessageMapper;
+import pub.izumi.coolqs.core.bean.Message;
+import pub.izumi.coolqs.core.bean.MessageGroup;
+import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
+import pub.izumi.coolqs.core.mapper.MessageMapper;
 
 /**
  * @author izumi

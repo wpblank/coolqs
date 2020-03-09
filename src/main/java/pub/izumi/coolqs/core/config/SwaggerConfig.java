@@ -1,4 +1,4 @@
-package pub.izumi.coolqs.config;
+package pub.izumi.coolqs.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
