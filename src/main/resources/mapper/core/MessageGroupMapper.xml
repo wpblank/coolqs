@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pub.izumi.coolqs.core.mapper.MessageGroupMapper">
+    <insert id="insertBatch" parameterType="list">
+        insert into message_group(role,`level`,nickname,msg,response,user_id,group_id,
+        create_time,age,sex,sub_type,message_type,post_type)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.role},#{item.level}, #{item.nickname},#{item.msg},#{item.response},#{item.userId},#{item.groupId},
+            #{item.createTime},#{item.age},#{item.sex},#{item.subType},#{item.messageType},#{item.postType})
+        </foreach>
+    </insert>
+</mapper>

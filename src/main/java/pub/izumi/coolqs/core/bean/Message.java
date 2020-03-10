@@ -3,6 +3,8 @@ package pub.izumi.coolqs.core.bean;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 /**
  * @author izumi
  */
@@ -35,16 +37,18 @@ public class Message {
      * 响应消息
      */
     private String response;
+    private Timestamp createTime;
 
     public Message() {
     }
 
-    public Message(String subType, String messageType, long userId, String nickname, String msg, String postType) {
+    public Message(String subType, String messageType, long userId, String nickname, String msg, String postType,Timestamp createTime) {
         this.subType = subType;
         this.messageType = messageType;
         this.userId = userId;
         this.nickname = nickname;
         this.msg = msg;
         this.postType = postType;
+        this.createTime = createTime;
     }
 }

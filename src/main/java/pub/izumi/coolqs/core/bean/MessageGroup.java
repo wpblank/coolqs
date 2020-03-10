@@ -2,6 +2,8 @@ package pub.izumi.coolqs.core.bean;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 /**
  * @author izumi
  */
@@ -20,8 +22,8 @@ public class MessageGroup extends Message {
 
     private long groupId;
 
-    public MessageGroup(String subType, String messageType, long userId, String nickname, String msg, String postType, Integer age, String sex, String level, String role, long groupId) {
-        super(subType, messageType, userId, nickname, msg, postType);
+    public MessageGroup(String subType, String messageType, long userId, String nickname, String msg, String postType, Timestamp createTime, Integer age, String sex, String level, String role, long groupId) {
+        super(subType, messageType, userId, nickname, msg, postType, createTime);
         this.age = age;
         this.sex = sex;
         this.level = level;

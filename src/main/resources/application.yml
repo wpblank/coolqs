@@ -9,11 +9,12 @@ spring:
     # password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis-plus:
-  mapper-locations: classpath:mapper/*Mapper.xml
+  mapper-locations: classpath:mapper/**/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true
 pub:
   izumi:
+    elemeStarUrl: https://star.tb.ele.me
     elehbUrl: http://127.0.0.1:1096/eleme_star/get_all
 #    weather:
 #      caiYunKey:
