@@ -12,3 +12,8 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*Mapper.xml
   configuration:
     map-underscore-to-camel-case: true
+pub:
+  izumi:
+    elehbUrl: http://127.0.0.1:1096/eleme_star/get_all
+#    weather:
+#      caiYunKey:

@@ -15,6 +15,7 @@ import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.bean.MessageGroup;
 import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
 import pub.izumi.coolqs.core.mapper.MessageMapper;
+import pub.izumi.coolqs.elehb.ElehbService;
 
 /**
  * @author pyr
@@ -22,6 +23,8 @@ import pub.izumi.coolqs.core.mapper.MessageMapper;
  * 添加事件：光标移动到类中，按 Ctrl+O 添加事件(讨论组消息、加群请求、加好友请求等)
  * 查看API参数类型：光标移动到方法括号中按Ctrl+P
  * 查看API说明：光标移动到方法括号中按Ctrl+Q
+ * <p>
+ * 统一消息接收处理中心
  */
 @Component
 public class MsgCenter extends CQPlugin {
@@ -30,6 +33,8 @@ public class MsgCenter extends CQPlugin {
     MessageGroupMapper messageGroupMapper;
     @Autowired
     MessageMapper messageMapper;
+    @Autowired
+    ElehbService elehbService;
 
     private static final Logger logger = LoggerFactory.getLogger(MsgCenter.class);
 
@@ -56,10 +61,9 @@ public class MsgCenter extends CQPlugin {
             default:
                 break;
         }
-//        if (msgStr.contains(eleUrl)) {
-//            ElehbService elehbService = new ElehbService();
-//            return response(elehbService.getEleHb(msg));
-//        }
+        if (message.contains("http")) {
+            return response(cq, elehbService.getEleHb(msg));
+        }
         msg.setResponse(msg.getMsg());
         return response(cq, msg);
     }
@@ -75,13 +79,16 @@ public class MsgCenter extends CQPlugin {
     @Override
     public int onGroupMessage(CoolQ cq, CQGroupMessageEvent event) {
         // 获取 消息内容 群号 发送者QQ
-        String msg = event.getMessage();
+        String message = event.getMessage();
         long groupId = event.getGroupId();
         long userId = event.getUserId();
         MessageGroup messageGroup = new MessageGroup(event.getSubType(), event.getMessageType(), userId,
-                event.getSender().getNickname(), msg, event.getPostType(), event.getSender().getAge(),
+                event.getSender().getNickname(), message, event.getPostType(), event.getSender().getAge(),
                 event.getSender().getSex(), event.getSender().getLevel(), event.getSender().getRole(), groupId);
 
+//        if (message.contains("http")) {
+//            return response(cq, elehbService.getEleHb(messageGroup));
+//        }
 //            // 回复内容为 at发送者 + hi
 //            String result = CQCode.at(userId) + "hi";
 //            // 调用API发送消息
