@@ -52,7 +52,7 @@ public class MsgCenter extends CQPlugin {
         switch (message) {
             case "在线帮助":
                 msg.setResponse("感谢使用！");
-                return response(msg);
+                return response(cq, msg);
             default:
                 break;
         }
@@ -61,7 +61,7 @@ public class MsgCenter extends CQPlugin {
 //            return response(elehbService.getEleHb(msg));
 //        }
         msg.setResponse(msg.getMsg());
-        return response(msg);
+        return response(cq, msg);
     }
 
 
@@ -91,28 +91,37 @@ public class MsgCenter extends CQPlugin {
     }
 
     public void saveMsg(Message msg) {
-        messageMapper.insert(msg);
+        if (messageMapper.insert(msg) <= 0) {
+            logger.error("保存数据库失败{}", JSON.toJSONString(msg));
+        }
     }
 
     public void saveMsg(MessageGroup msg) {
-        messageGroupMapper.insert(msg);
+        if (messageGroupMapper.insert(msg) <= 0) {
+            logger.error("保存数据库失败{}", JSON.toJSONString(msg));
+        }
     }
 
-    public int response(MessageGroup messageGroup) {
+    /**
+     * 回复群聊信息
+     */
+    public int response(CoolQ cq, MessageGroup messageGroup) {
         saveMsg(messageGroup);
-        // 不执行下一个插件
         return MESSAGE_BLOCK;
     }
 
-    public int response(Message message) {
+    /**
+     * 回复私聊信息
+     */
+    public int response(CoolQ cq, Message message) {
         saveMsg(message);
+        cq.sendPrivateMsg(message.getUserId(), message.getResponse(), false);
         // 不执行下一个插件
         return MESSAGE_BLOCK;
     }
 
     public int ignore(Message message) {
         saveMsg(message);
-        // 继续执行下一个插件
         return MESSAGE_IGNORE;
     }
 
