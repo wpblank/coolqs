@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.bean.MessageGroup;
 import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
@@ -33,7 +34,7 @@ import java.util.List;
  * <p>
  * 统一消息接收处理中心
  */
-@Component
+@Service
 public class MsgCenter extends CQPlugin {
 
     @Autowired
@@ -63,6 +64,7 @@ public class MsgCenter extends CQPlugin {
      */
     @Override
     public int onPrivateMessage(CoolQ cq, CQPrivateMessageEvent event) {
+
         // 获取 发送者QQ 和 消息内容
         long userId = event.getUserId();
         String message = event.getMessage();

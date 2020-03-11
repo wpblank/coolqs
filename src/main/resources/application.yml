@@ -16,5 +16,7 @@ pub:
   izumi:
     elemeStarUrl: https://star.tb.ele.me
     elehbUrl: http://127.0.0.1:1096/eleme_star/get_all
-#    weather:
+    weather:
+      caiYunUrl: https://api.caiyunapp.com/v2.5/
+#      caiYunLocation: /116.xxx,40.xxx/hourly  # 调用小时接口
 #      caiYunKey:
