@@ -69,7 +69,7 @@ public class MsgCenter extends CQPlugin {
         long userId = event.getUserId();
         String message = event.getMessage();
         Message msg = new Message(event.getSubType(), event.getMessageType(), userId, event.getSender().getNickname(),
-                message, event.getPostType(), Timestamp.from(Instant.now()));
+                message, event.getPostType());
         logger.info("获取到机器人对象{}{}", cq.toString(), cq);
         switch (message) {
             case "在线帮助":
@@ -99,7 +99,7 @@ public class MsgCenter extends CQPlugin {
         long groupId = event.getGroupId();
         long userId = event.getUserId();
         MessageGroup messageGroup = new MessageGroup(event.getSubType(), event.getMessageType(), userId,
-                event.getSender().getNickname(), message, event.getPostType(), Timestamp.from(Instant.now()),
+                event.getSender().getNickname(), message, event.getPostType(),
                 event.getSender().getAge(), event.getSender().getSex(), event.getSender().getLevel(), event.getSender().getRole(), groupId);
 
 //        if (message.contains("http")) {
@@ -135,6 +135,7 @@ public class MsgCenter extends CQPlugin {
      */
     public int response(CoolQ cq, MessageGroup messageGroup) {
         saveMsg(messageGroup);
+        cq.sendGroupMsg(messageGroup.getGroupId(), messageGroup.getResponse(), false);
         return MESSAGE_BLOCK;
     }
 

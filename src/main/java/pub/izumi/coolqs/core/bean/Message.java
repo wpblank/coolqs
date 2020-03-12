@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 /**
  * @author izumi
@@ -42,13 +43,13 @@ public class Message {
     public Message() {
     }
 
-    public Message(String subType, String messageType, long userId, String nickname, String msg, String postType,Timestamp createTime) {
+    public Message(String subType, String messageType, long userId, String nickname, String msg, String postType) {
         this.subType = subType;
         this.messageType = messageType;
         this.userId = userId;
         this.nickname = nickname;
         this.msg = msg;
         this.postType = postType;
-        this.createTime = createTime;
+        this.createTime = Timestamp.from(Instant.now());
     }
 }

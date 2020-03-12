@@ -31,7 +31,7 @@ public class CoolqsApplication {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         taskScheduler.setPoolSize(10);
         taskScheduler.initialize();
-        taskScheduler.setThreadNamePrefix("springboot-task");
+        taskScheduler.setThreadNamePrefix("my-task");
         return taskScheduler;
     }
 
