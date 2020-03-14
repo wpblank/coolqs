@@ -10,18 +10,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.bean.MessageGroup;
+import pub.izumi.coolqs.core.bean.User;
 import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
 import pub.izumi.coolqs.core.mapper.MessageMapper;
+import pub.izumi.coolqs.core.mapper.UserMapper;
 import pub.izumi.coolqs.elehb.ElehbService;
+import pub.izumi.coolqs.weather.WeatherService;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +40,16 @@ public class MsgCenter extends CQPlugin {
     @Autowired
     MessageMapper messageMapper;
     @Autowired
+    UserMapper userMapper;
+    @Autowired
+    WeatherService weatherService;
+    @Autowired
     ElehbService elehbService;
 
     @Value("${pub.izumi.elemeStarUrl}")
     private String elemeStarUrl;
+    @Value("${pub.izumi.debug}")
+    private Boolean debug;
 
     private static final Logger logger = LoggerFactory.getLogger(MsgCenter.class);
 
@@ -102,24 +106,35 @@ public class MsgCenter extends CQPlugin {
                 event.getSender().getNickname(), message, event.getPostType(),
                 event.getSender().getAge(), event.getSender().getSex(), event.getSender().getLevel(), event.getSender().getRole(), groupId);
 
-//        if (message.contains("http")) {
-//            return response(cq, elehbService.getEleHb(messageGroup));
-//        }
-//            // 回复内容为 at发送者 + hi
-//            String result = CQCode.at(userId) + "hi";
-//            // 调用API发送消息
-//            cq.sendGroupMsg(groupId, result, false);
+        // 被 @事件
+        if (message.contains(CQCode.at(event.getSelfId()))) {
+            if (message.contains("取消天气提醒")) {
+                User user = new User(userId, messageGroup.getNickname(), groupId, 1);
+                messageGroup.setResponse(CQCode.at(userId) + weatherService.freezeUser(user));
+                response(cq, messageGroup);
+            } else if (message.contains("天气提醒")) {
+                User user = new User(userId, messageGroup.getNickname(), groupId, 1);
+                messageGroup.setResponse(CQCode.at(userId) + weatherService.activateUser(user));
+                response(cq, messageGroup);
+            }
+        }
         return ignore(messageGroup);
 
     }
 
     public void saveMsg(Message msg) {
+        if (debug) {
+            return;
+        }
         if (messageMapper.insert(msg) <= 0) {
             logger.error("保存数据库失败{}", JSON.toJSONString(msg));
         }
     }
 
     public void saveMsg(MessageGroup msg) {
+        if (debug) {
+            return;
+        }
         messageGroups.add(msg);
         if (messageGroups.size() > BATCH_SIZE) {
             if (messageGroupMapper.insertBatch(messageGroups) > 0) {

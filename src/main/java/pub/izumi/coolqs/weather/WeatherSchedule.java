@@ -14,10 +14,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import pub.izumi.coolqs.core.MsgCenter;
 import pub.izumi.coolqs.core.bean.MessageGroup;
+import pub.izumi.coolqs.core.service.RoleService;
 
 import java.util.*;
 
 import static net.lz1998.cq.CQGlobal.robots;
+import static pub.izumi.coolqs.core.config.Constant.weatherRole;
 
 /**
  * @author izumi
@@ -27,6 +29,8 @@ import static net.lz1998.cq.CQGlobal.robots;
 public class WeatherSchedule {
     @Autowired
     MsgCenter msgCenter;
+    @Autowired
+    RoleService roleService;
 
     @Value("${pub.izumi.weather.caiYunUrl}")
     private String caiYunUrl;
@@ -54,10 +58,13 @@ public class WeatherSchedule {
             CoolQ coolQ = robots.values().iterator().next();
             logger.info("获取一次天气 {}", coolQ.toString());
             String url = caiYunUrl + caiYunKey + caiYunLocation;
-            Map<String, Object> param = new HashMap<>();
-            param.put("lang", "zh_CN");
-            param.put("hourlysteps", 10);
-            param.put("unit", "metric:v1");
+            Map<String, Object> param = new HashMap<String, Object>() {
+                {
+                    put("lang", "zh_CN");
+                    put("hourlysteps", 10);
+                    put("unit", "metric:v1");
+                }
+            };
             ResponseEntity<String> responseEntity =
                     restTemplate.exchange(url, HttpMethod.GET, null, String.class, param);
             JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
@@ -74,7 +81,8 @@ public class WeatherSchedule {
             });
             if (description.contains("雨") || description.contains("雪") || result.size() > 3) {
                 result.remove(null);
-                MessageGroup messageGroup = new MessageGroup(QQGroup, coolQ.getSelfId(), result.toString());
+                MessageGroup messageGroup = new MessageGroup(QQGroup, coolQ.getSelfId(),
+                        roleService.getAtqqlistById(weatherRole) + result.toString());
                 msgCenter.response(coolQ, messageGroup);
             }
         }

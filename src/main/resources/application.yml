@@ -14,6 +14,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 pub:
   izumi:
+    debug: true
 #    QQGroup: xxx
     elemeStarUrl: https://star.tb.ele.me
     elehbUrl: http://127.0.0.1:1096/eleme_star/get_all
