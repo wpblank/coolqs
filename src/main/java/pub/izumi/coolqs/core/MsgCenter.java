@@ -137,8 +137,9 @@ public class MsgCenter extends CQPlugin {
         }
         messageGroups.add(msg);
         if (messageGroups.size() > BATCH_SIZE) {
-            if (messageGroupMapper.insertBatch(messageGroups) > 0) {
-                messageGroups.clear();
+            List<MessageGroup> tempMsgList = messageGroups.subList(0, BATCH_SIZE);
+            if (messageGroupMapper.insertBatch(tempMsgList) == BATCH_SIZE) {
+                messageGroups.removeAll(tempMsgList);
             } else {
                 logger.error("保存数据库失败,{}", messageGroups.size());
             }

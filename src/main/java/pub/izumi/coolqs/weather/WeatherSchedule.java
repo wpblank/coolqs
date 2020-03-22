@@ -51,7 +51,7 @@ public class WeatherSchedule {
     /**
      * 请求彩云天气 "小时级预报接口"，当天有雨时qq预警。
      */
-    @Scheduled(cron = "0 0 */2 * * ?")
+    @Scheduled(cron = "0 0 */4 * * ?")
     public void getWeather() {
         if (robots.values().iterator().hasNext()) {
             Set<Object> result = new LinkedHashSet<>(8);
