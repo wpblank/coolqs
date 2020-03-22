@@ -11,7 +11,7 @@ public class Test {
         for (int i = 0; i < 10; i++) {
             integers.add(i);
         }
-        List<Integer> temp = integers.subList(0,3);
+        List<Integer> temp = integers.subList(0,10);
         System.out.println(temp);
         System.out.println(integers);
         integers.removeAll(temp);

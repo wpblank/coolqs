@@ -15,7 +15,7 @@ mybatis-plus:
 pub:
   izumi:
     debug: true
-#    QQGroup: xxx
+    #    QQGroup: xxx
     elemeStarUrl: https://star.tb.ele.me
     elehbUrl: http://127.0.0.1:1096/eleme_star/get_all
     weather:

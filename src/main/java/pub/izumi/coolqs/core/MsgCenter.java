@@ -74,7 +74,6 @@ public class MsgCenter extends CQPlugin {
         String message = event.getMessage();
         Message msg = new Message(event.getSubType(), event.getMessageType(), userId, event.getSender().getNickname(),
                 message, event.getPostType());
-        logger.info("获取到机器人对象{}{}", cq.toString(), cq);
         switch (message) {
             case "在线帮助":
                 msg.setResponse("感谢使用！");
@@ -144,6 +143,13 @@ public class MsgCenter extends CQPlugin {
                 logger.error("保存数据库失败,{}", messageGroups.size());
             }
         }
+    }
+
+    public void saveMsgWhenExit() {
+        if (debug) {
+            return;
+        }
+        logger.info("程序关闭,保存剩余{}条记录", messageGroupMapper.insertBatch(messageGroups));
     }
 
     /**
