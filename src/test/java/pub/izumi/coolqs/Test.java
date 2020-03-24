@@ -11,10 +11,26 @@ public class Test {
         for (int i = 0; i < 10; i++) {
             integers.add(i);
         }
-        List<Integer> temp = integers.subList(0,10);
+        new Thread(() -> {
+            for (int i = 10; i < 100; i++) {
+                integers.add(i);
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        List<Integer> temp = integers.subList(0,8);
         System.out.println(temp);
+        integers.add(123);
         System.out.println(integers);
-        integers.removeAll(temp);
+        integers.removeAll(integers.subList(0,8));
         System.out.println(integers);
     }
 }

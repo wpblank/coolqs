@@ -7,10 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pub.izumi.coolqs.core.MsgCenter;
 import pub.izumi.coolqs.core.bean.MessageGroup;
@@ -58,15 +62,13 @@ public class WeatherSchedule {
             CoolQ coolQ = robots.values().iterator().next();
             logger.info("获取一次天气 {}", coolQ.toString());
             String url = caiYunUrl + caiYunKey + caiYunLocation;
-            Map<String, Object> param = new HashMap<String, Object>() {
-                {
-                    put("lang", "zh_CN");
-                    put("hourlysteps", 10);
-                    put("unit", "metric:v1");
-                }
-            };
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("lang", "zh_CN");
+            requestBody.put("hourlysteps", 10);
+            requestBody.put("unit", "metric:v1");
             ResponseEntity<String> responseEntity =
-                    restTemplate.exchange(url, HttpMethod.GET, null, String.class, param);
+                    restTemplate.exchange(url + "?lang={lang}&hourlysteps={hourlysteps}&unit={unit}",
+                            HttpMethod.GET, null, String.class, requestBody);
             JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
             jsonObject = jsonObject.getJSONObject("result").getJSONObject("hourly");
             String description = jsonObject.getString("description");

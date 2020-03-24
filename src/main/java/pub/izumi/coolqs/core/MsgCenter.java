@@ -57,7 +57,7 @@ public class MsgCenter extends CQPlugin {
     /**
      * 保存群聊数据批量插入的最大条数
      */
-    private static final int BATCH_SIZE = 30;
+    private static final int BATCH_SIZE = 50;
 
     /**
      * 收到私聊消息时会调用这个方法
@@ -138,7 +138,7 @@ public class MsgCenter extends CQPlugin {
         if (messageGroups.size() > BATCH_SIZE) {
             List<MessageGroup> tempMsgList = messageGroups.subList(0, BATCH_SIZE);
             if (messageGroupMapper.insertBatch(tempMsgList) == BATCH_SIZE) {
-                messageGroups.removeAll(tempMsgList);
+                messageGroups.removeAll(messageGroups.subList(0, BATCH_SIZE));
             } else {
                 logger.error("保存数据库失败,{}", messageGroups.size());
             }
