@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.bean.MessageGroup;
@@ -45,6 +46,8 @@ public class MsgCenter extends CQPlugin {
     WeatherService weatherService;
     @Autowired
     ElehbService elehbService;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Value("${pub.izumi.elemeStarUrl}")
     private String elemeStarUrl;
@@ -130,7 +133,7 @@ public class MsgCenter extends CQPlugin {
         }
     }
 
-    public void saveMsg(MessageGroup msg) {
+    public synchronized void saveMsg(MessageGroup msg) {
         if (debug) {
             return;
         }
