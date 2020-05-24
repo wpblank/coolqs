@@ -88,7 +88,7 @@ public class MsgCenter extends CQPlugin {
             return response(cq, elehbService.getEleHb(msg));
         }
         msg.setResponse(msg.getMsg());
-        return response(cq, msg);
+        return ignore(msg);
     }
 
 
