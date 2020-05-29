@@ -18,6 +18,7 @@ import pub.izumi.coolqs.core.bean.User;
 import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
 import pub.izumi.coolqs.core.mapper.MessageMapper;
 import pub.izumi.coolqs.core.mapper.UserMapper;
+import pub.izumi.coolqs.core.service.ChatService;
 import pub.izumi.coolqs.elehb.ElehbService;
 import pub.izumi.coolqs.weather.WeatherService;
 
@@ -128,6 +129,7 @@ public class MsgCenter extends CQPlugin {
         if (debug) {
             return;
         }
+        ChatService.onPrivateMessage(msg);
         if (messageMapper.insert(msg) <= 0) {
             logger.error("保存数据库失败{}", JSON.toJSONString(msg));
         }

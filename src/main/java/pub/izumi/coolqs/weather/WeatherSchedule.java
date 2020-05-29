@@ -29,7 +29,7 @@ import static pub.izumi.coolqs.core.config.Constant.weatherRole;
  * @author izumi
  * 定时任务，每日雨雪天气警报
  */
-@Component
+//@Component
 public class WeatherSchedule {
     @Autowired
     MsgCenter msgCenter;

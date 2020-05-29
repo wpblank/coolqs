@@ -33,4 +33,5 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      */
     @Select("select * from user_role where id=#{id} and status=1")
     List<UserRole> getUserRoleListById(int id);
+
 }
