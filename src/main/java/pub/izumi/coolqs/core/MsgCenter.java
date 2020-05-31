@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import pub.izumi.coolqs.core.bean.Chat;
 import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.bean.MessageGroup;
 import pub.izumi.coolqs.core.bean.User;
@@ -19,6 +20,7 @@ import pub.izumi.coolqs.core.mapper.MessageGroupMapper;
 import pub.izumi.coolqs.core.mapper.MessageMapper;
 import pub.izumi.coolqs.core.mapper.UserMapper;
 import pub.izumi.coolqs.core.service.ChatService;
+import pub.izumi.coolqs.core.service.UserService;
 import pub.izumi.coolqs.elehb.ElehbService;
 import pub.izumi.coolqs.weather.WeatherService;
 
@@ -72,7 +74,6 @@ public class MsgCenter extends CQPlugin {
      */
     @Override
     public int onPrivateMessage(CoolQ cq, CQPrivateMessageEvent event) {
-
         // 获取 发送者QQ 和 消息内容
         long userId = event.getUserId();
         String message = event.getMessage();
@@ -108,30 +109,32 @@ public class MsgCenter extends CQPlugin {
         MessageGroup messageGroup = new MessageGroup(event.getSubType(), event.getMessageType(), userId,
                 event.getSender().getNickname(), message, event.getPostType(),
                 event.getSender().getAge(), event.getSender().getSex(), event.getSender().getLevel(), event.getSender().getRole(), groupId);
-
         // 被 @事件
         if (message.contains(CQCode.at(event.getSelfId()))) {
             if (message.contains("取消天气提醒")) {
-                User user = new User(userId, messageGroup.getNickname(), groupId, 1);
+                User user = new User(userId, messageGroup.getNickname(),null, groupId, 1);
                 messageGroup.setResponse(CQCode.at(userId) + weatherService.freezeUser(user));
                 response(cq, messageGroup);
             } else if (message.contains("天气提醒")) {
-                User user = new User(userId, messageGroup.getNickname(), groupId, 1);
+                User user = new User(userId, messageGroup.getNickname(),null, groupId, 1);
                 messageGroup.setResponse(CQCode.at(userId) + weatherService.activateUser(user));
                 response(cq, messageGroup);
             }
         }
         return ignore(messageGroup);
-
     }
 
-    public void saveMsg(Message msg) {
+    public void saveMsg(Message message) {
         if (debug) {
             return;
         }
-        ChatService.onPrivateMessage(msg);
-        if (messageMapper.insert(msg) <= 0) {
-            logger.error("保存数据库失败{}", JSON.toJSONString(msg));
+        User user = new User(message.getUserId(), message.getNickname(), null, null, 1);
+        UserService.addUser(user);
+        Chat chat = new Chat(message.getUserId(), message.getNickname(), user.getAvatar(),
+                message.getMsg(), 1, message.getCreateTime());
+        ChatService.onMessage(chat);
+        if (messageMapper.insertToTable(message, ChatService.msgTableName) <= 0) {
+            logger.error("保存数据库失败{}", JSON.toJSONString(message));
         }
     }
 
@@ -139,10 +142,13 @@ public class MsgCenter extends CQPlugin {
         if (debug) {
             return;
         }
+        Chat chat = new Chat(msg.getGroupId(), msg.getNickname(), "https://pic2.zhimg.com/60d301cb561fe0e4c13509fee6fa17c9_xll.jpg",
+                msg.getNickname() + ":" + msg.getMsg(), 1, msg.getCreateTime());
+        ChatService.onMessage(chat);
         messageGroups.add(msg);
         if (messageGroups.size() > BATCH_SIZE) {
             List<MessageGroup> tempMsgList = messageGroups.subList(0, BATCH_SIZE);
-            if (messageGroupMapper.insertBatch(tempMsgList) == BATCH_SIZE) {
+            if (messageGroupMapper.insertBatch(tempMsgList, ChatService.msgGroupTableName) == BATCH_SIZE) {
                 messageGroups.removeAll(messageGroups.subList(0, BATCH_SIZE));
             } else {
                 logger.error("保存数据库失败,{}", messageGroups.size());
@@ -154,7 +160,7 @@ public class MsgCenter extends CQPlugin {
         if (debug) {
             return;
         }
-        logger.info("程序关闭,保存剩余{}条记录", messageGroupMapper.insertBatch(messageGroups));
+        logger.info("程序关闭,保存剩余{}条记录", messageGroupMapper.insertBatch(messageGroups, ChatService.msgGroupTableName));
     }
 
     /**

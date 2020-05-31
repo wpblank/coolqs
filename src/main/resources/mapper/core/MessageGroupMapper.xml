@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pub.izumi.coolqs.core.mapper.MessageGroupMapper">
     <insert id="insertBatch" parameterType="list">
-        insert into message_group(role,`level`,nickname,msg,response,user_id,group_id,
+        insert into ${tableName}(role,`level`,nickname,msg,response,user_id,group_id,
         create_time,age,sex,sub_type,message_type,post_type)
         VALUES
         <foreach collection="list" item="item" separator=",">

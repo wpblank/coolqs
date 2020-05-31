@@ -13,9 +13,10 @@ import pub.izumi.coolqs.core.bean.User;
 @Component
 public interface UserMapper extends BaseMapper<User> {
 
-    @Insert("REPLACE INTO user(user_id,nickname,group_id) VALUES (#{userId},#{nickname},#{groupId})")
+    @Insert("REPLACE INTO user(user_id,nickname,avatar,group_id) VALUES (#{userId},#{nickname},#{avatar},#{groupId})")
     int repalceUser(User user);
 
-    @Insert("REPLACE INTO user(user_id,nickname,group_id,status) VALUES (#{userId},#{nickname},#{groupId},#{status})")
+    @Insert("REPLACE INTO user(user_id,nickname,avatar,group_id,status) " +
+            "VALUES (#{userId},#{nickname},#{avatar},#{groupId},#{status})")
     int freezeUser(User user);
 }

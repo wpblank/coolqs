@@ -22,6 +22,10 @@ public class Chat {
     public Chat() {
     }
 
+    public void addLastMessage() {
+        unreadMessage++;
+    }
+
     public Chat(Long id, String name, String avatar, String lastMessage, int unreadMessage, Timestamp updateTime) {
         this.id = id;
         this.name = name;

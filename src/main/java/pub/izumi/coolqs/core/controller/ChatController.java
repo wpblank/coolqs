@@ -11,6 +11,8 @@ import pub.izumi.coolqs.core.bean.Chat;
 import pub.izumi.coolqs.core.bean.Message;
 import pub.izumi.coolqs.core.mapper.ChatMapper;
 import pub.izumi.coolqs.core.mapper.MessageMapper;
+import pub.izumi.coolqs.core.service.ChatService;
+import pub.izumi.coolqs.core.service.UserService;
 
 /**
  * @author izumi
@@ -22,10 +24,22 @@ public class ChatController {
 
     @Autowired
     ChatMapper chatMapper;
+    @Autowired
+    MessageMapper messageMapper;
 
     @GetMapping("")
     public ResponseEntity<Object> getMessageList(@RequestParam("qq") String qq) {
-        return new ResponseEntity<>(chatMapper.selectList(null), HttpStatus.OK);
+        return new ResponseEntity<>(ChatService.chatLinkedList, HttpStatus.OK);
+    }
+
+    @GetMapping("user")
+    public ResponseEntity<Object> getUserList(@RequestParam("qq") String qq) {
+        return new ResponseEntity<>(UserService.userList, HttpStatus.OK);
+    }
+
+    @GetMapping("test")
+    public ResponseEntity<Object> hasTable(@RequestParam("message") String message) {
+        return new ResponseEntity<>(messageMapper.hasTable(message), HttpStatus.OK);
     }
 
 }
